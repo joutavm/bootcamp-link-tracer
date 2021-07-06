@@ -1,6 +1,7 @@
 package com.joao.linktracer.controller;
 
 import com.joao.linktracer.config.exceptions.InvalidLinkException;
+import com.joao.linktracer.config.exceptions.InvalidPasswordException;
 import com.joao.linktracer.controller.form.LinkForm;
 import com.joao.linktracer.models.Link;
 import com.joao.linktracer.models.Status;
@@ -32,13 +33,15 @@ public class LinkController {
 
     @RequestMapping("/link/{id}")
     @Transactional
-    public RedirectView redirec(@PathVariable Long id, HttpServletResponse response) {
+    public RedirectView redirec(@PathVariable Long id, @RequestParam() String senha) {
         Optional<Link> optionalLink = linkRepository.findById(id);
         if(optionalLink.isEmpty())
             throw new NoSuchElementException();
         Link link = optionalLink.get();
         if (link.getStatus() == Status.INVALIDO)
             throw new InvalidLinkException("Invalid link");
+        if (!link.getSenha().equals(senha))
+            throw new InvalidPasswordException("Wrong password");
         return new RedirectView(optionalLink.get().openLink());
     }
 

@@ -16,13 +16,15 @@ public class Link {
     @Enumerated(EnumType.STRING)
     private Status status;
     private Long counter = Long.parseLong("0");
+    private String senha;
 
     public Link(){
     }
 
-    public Link(String url, Status status) {
+    public Link(String url, Status status, String senha) {
         this.url = url;
         this.status = status;
+        this.senha = senha;
     }
 
     public String openLink(){
